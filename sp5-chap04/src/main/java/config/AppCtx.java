@@ -10,6 +10,7 @@ import spring.MemberPrinter;
 import spring.MemberListPrinter;
 import spring.MemberInfoPrinter;
 import spring.VersionPrinter;
+import spring.MemberSummaryPrinter;
 
 @Configuration
 public class AppCtx {
@@ -37,8 +38,10 @@ public class AppCtx {
 	}
 	
 	@Bean
-	public MemberPrinter memberPrinter2() {
-		return new MemberPrinter();
+	//@Qualifier("printer")
+	@Qualifier("summaryPrinter")
+	public MemberSummaryPrinter memberPrinter2() {
+		return new MemberSummaryPrinter();
 	}
 	
 	@Bean
