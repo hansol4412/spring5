@@ -23,7 +23,7 @@ public class MemberDao {
 
 	public Member selectByEmail(String email) {
 		List<Member> result = jdbcTemplate.query(
-				"selct * from MEMBER where EMAIL =?",
+				"select * from MEMBER where EMAIL =?",
 				new RowMapper<Member>() {
 					@Override
 					public Member mapRow(ResultSet rs, int rowNum) throws SQLException{
@@ -51,7 +51,7 @@ public class MemberDao {
 				pstmt.setString(1, member.getEmail());
 				pstmt.setString(2, member.getPassword());
 				pstmt.setString(3, member.getName());
-				pstmt.setTimestamp(4, Timestamp.valueOf(member.getRegiserDateTime()));
+				pstmt.setTimestamp(4, Timestamp.valueOf(member.getRegiserDateTime())); 
 				return pstmt;
 			}
 		},keyHolder);
@@ -68,7 +68,7 @@ public class MemberDao {
 	
 	public List<Member> selectAll(){
 		List<Member> result = jdbcTemplate.query(
-				"selct * from MEMBER",
+				"select * from MEMBER",
 				new RowMapper<Member>() {
 					@Override
 					public Member mapRow(ResultSet rs, int rowNum) throws SQLException{
