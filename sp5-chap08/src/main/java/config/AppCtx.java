@@ -2,9 +2,15 @@ package config;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import spring.MemberDao;
+import spring.ChangePasswordService;
 
 @Configuration
+@EnableTransactionManagement
 public class AppCtx {
 	@Bean(destroyMethod = "close")
 	public DataSource dataSource() {
@@ -20,9 +26,22 @@ public class AppCtx {
 		ds.setTimeBetweenEvictionRunsMillis(1000*10); //10초 주기로  유휴 컨넥션 유효여부
 		return ds;
 	}
+	@Bean
+	public PlatformTransactionManager platformTransactionManager() {
+		DataSourceTransactionManager tm = new DataSourceTransactionManager();
+		tm.setDataSource(dataSource());
+		return tm;
+	}
 	
 	@Bean
 	public MemberDao memberDao() {
 		return new MemberDao(dataSource());
+	}
+	
+	@Bean
+	public ChangePasswordService changePwdSvc() {
+		ChangePasswordService pwdSvc = new ChangePasswordService();
+		pwdSvc.setMemberDao(memberDao());
+		return pwdSvc;
 	}
 }
