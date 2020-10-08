@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import controller.RegisterController;
 import spring.MemberRegisterService;
+import survey.SurveyController;
 @Configuration
 public class ControllerConfig {
 	@Autowired
@@ -14,5 +15,10 @@ public class ControllerConfig {
 	RegisterController controller = new RegisterController();
 	controller.setMemberRegisterService(memberRegSvc);
 	return controller;
+	}
+	
+	@Bean
+	public SurveyController surveyController() {
+		return new SurveyController();
 	}
 }
