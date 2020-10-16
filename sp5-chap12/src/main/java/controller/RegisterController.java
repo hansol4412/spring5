@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 
 import spring.DuplicateMemberException;
 import spring.MemberRegisterService;
@@ -42,11 +43,16 @@ public class RegisterController {
 	}
 	
 	@PostMapping("/register/step3")
-	public String handleStep3(RegisterRequest regReq){
+	public String handleStep3(RegisterRequest regReq, Errors errors){
+		new RegisterRequestValidator().validate(regReq, errors);
+		if(errors.hasErrors()) {
+			return "register/step2";
+		}
 			try {
 				memberRegisterService.regist(regReq);
 				return "/register/step3";
 			}catch(DuplicateMemberException ex){
+				errors.rejectValue("email", "duplicate");
 				return "/register/step2";
 			}
 		}
