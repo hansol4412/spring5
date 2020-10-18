@@ -8,10 +8,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.validation.Validator;
+
+import controller.RegisterRequestValidator;
 
 @Configuration
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
+	
+	//글로벌 범위 Validator 설정
+	@Override
+	public Validator getValidator() {
+		return new RegisterRequestValidator();
+	}
 
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
