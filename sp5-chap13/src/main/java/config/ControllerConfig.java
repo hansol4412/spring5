@@ -5,12 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import controller.RegisterController;
 import controller.RegisterControllerWithGlobalValidator;
 import controller.RegisterControllerWithLocalValidator;
+import controller.LoginController;
 import spring.MemberRegisterService;
+import spring.AuthService;
 import survey.SurveyController;
 @Configuration
 public class ControllerConfig {
 	@Autowired
 	private MemberRegisterService memberRegSvc;
+	@Autowired
+	private AuthService authService;
 	
 	/*
 	@Bean
@@ -43,5 +47,12 @@ public class ControllerConfig {
 	@Bean
 	public SurveyController surveyController() {
 		return new SurveyController();
+	}
+	
+	@Bean 
+	public LoginController loginController() {
+		LoginController controller = new LoginController();
+		controller.setAuthService(authService);
+		return controller;
 	}
 }
