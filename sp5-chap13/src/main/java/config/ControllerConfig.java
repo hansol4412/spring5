@@ -6,6 +6,7 @@ import controller.RegisterController;
 import controller.RegisterControllerWithGlobalValidator;
 import controller.RegisterControllerWithLocalValidator;
 import controller.LoginController;
+import controller.LogoutController;
 import spring.MemberRegisterService;
 import spring.AuthService;
 import survey.SurveyController;
@@ -55,4 +56,11 @@ public class ControllerConfig {
 		controller.setAuthService(authService);
 		return controller;
 	}
+	
+	@Bean 
+	public LogoutController logoutController() {
+		return new LogoutController();
+	}
+	
+	
 }

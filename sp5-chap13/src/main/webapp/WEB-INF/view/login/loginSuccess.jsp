@@ -7,6 +7,6 @@
 </head>
 <body>
 	<p><spring:message code="login.done"/></p>
-	<p><a href="<c:url value='/main/'/>"><spring:message code="go.main"/></a></p>
+	<p><a href="<c:url value='/main'/>"><spring:message code="go.main"/></a></p>
 </body>
 </html>
