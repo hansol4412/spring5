@@ -7,7 +7,6 @@
 </head>
 <body>
 	<form:form  modelAttribute="loginCommand">
-	<form:errors/>
 	<p>
 		<label><spring:message code="email"/>:<br>
 		<form:input path="email"/>
