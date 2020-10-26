@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.time.LocalDateTime;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -100,5 +101,23 @@ public class MemberDao {
 				"select count(*) from MEMBER",Integer.class);
 		return count;
 				
+	}
+	
+	public List<Member> selectByRegdate(LocalDateTime from, LocalDateTime to){
+		List<Member> results = jdbcTemplate.query(
+			"select * from MEMBER where REGDATE between ? and ? order by REGDATE desc",
+			new RowMapper<Member>() {
+				@Override
+				public Member mapRow(ResultSet rs, int rowNum) throws SQLException{
+					Member member = new Member(
+							rs.getString("EMAIL"),
+							rs.getString("PASSWORD"),
+							rs.getString("NAME"),
+							rs.getTimestamp("REGDATE").toLocalDateTime());
+					member.setId(rs.getLong("ID"));
+					return member;
+				}
+				},from, to);
+		return results;
 	}
 }

@@ -8,9 +8,11 @@ import controller.RegisterControllerWithLocalValidator;
 import controller.LoginController;
 import controller.LogoutController;
 import controller.ChangePwdController;
+import controller.MemberListController;
 import spring.MemberRegisterService;
 import spring.AuthService;
 import spring.ChangePasswordService;
+import spring.MemberDao;
 import survey.SurveyController;
 @Configuration
 public class ControllerConfig {
@@ -20,27 +22,8 @@ public class ControllerConfig {
 	private AuthService authService;
 	@Autowired
 	private ChangePasswordService changePasswordService;
-	/*
-	@Bean
-	public RegisterController registerController() {
-	RegisterController controller = new RegisterController();
-	controller.setMemberRegisterService(memberRegSvc);
-	return controller;
-	}
-	*/
-	
-	
-	/*
-	 //Grobal Validator 설정
-	@Bean
-	public RegisterControllerWithGlobalValidator registerControllerGlobalValidator() {
-		RegisterControllerWithGlobalValidator controller = new RegisterControllerWithGlobalValidator();
-		controller.setMemberRegisterService(memberRegSvc);
-		return controller;
-	}
-	*/
-	
-	//@InitBinder 애노테이션을 이용한 Local Validator 설정
+	@Autowired
+	private MemberDao memberDao;
 	@Bean
 	public RegisterControllerWithLocalValidator registerControllerLocalValidator() {
 		RegisterControllerWithLocalValidator controller = new RegisterControllerWithLocalValidator();
@@ -69,6 +52,13 @@ public class ControllerConfig {
 	public ChangePwdController changePwdController() {
 		ChangePwdController controller = new ChangePwdController();
 		controller.setChangePasswordService(changePasswordService);
+		return controller;
+	}
+	
+	@Bean
+	public MemberListController memberListController() {
+		MemberListController controller = new MemberListController();
+		controller.setMemberDao(memberDao);
 		return controller;
 	}
 	
