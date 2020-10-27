@@ -1,4 +1,4 @@
-package config;
+ package config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import controller.LoginController;
 import controller.LogoutController;
 import controller.ChangePwdController;
 import controller.MemberListController;
+import controller.MemberDetailController;
 import spring.MemberRegisterService;
 import spring.AuthService;
 import spring.ChangePasswordService;
@@ -58,6 +59,13 @@ public class ControllerConfig {
 	@Bean
 	public MemberListController memberListController() {
 		MemberListController controller = new MemberListController();
+		controller.setMemberDao(memberDao);
+		return controller;
+	}
+	
+	@Bean
+	public MemberDetailController memberDetailController() {
+		MemberDetailController controller = new MemberDetailController();
 		controller.setMemberDao(memberDao);
 		return controller;
 	}

@@ -17,6 +17,20 @@ import org.springframework.jdbc.support.KeyHolder;
 
 public class MemberDao {
 	private JdbcTemplate jdbcTemplate;
+	private RowMapper<Member> memRowMapper = 
+		new RowMapper<Member>() {
+		@Override
+		public Member mapRow(ResultSet rs, int rowNum) throws SQLException{
+			Member member = new Member(
+					rs.getString("EMAIL"),
+					rs.getString("PASSWORD"),
+					rs.getString("NAME"),
+					rs.getTimestamp("REGDATE").toLocalDateTime());
+			member.setId(rs.getLong("ID"));
+			return member;
+		}
+	};
+
 	
 	public MemberDao(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -25,19 +39,7 @@ public class MemberDao {
 	public Member selectByEmail(String email) {
 		List<Member> result = jdbcTemplate.query(
 				"select * from MEMBER where EMAIL =?",
-				new RowMapper<Member>() {
-					@Override
-					public Member mapRow(ResultSet rs, int rowNum) throws SQLException{
-						Member member = new Member(
-								rs.getString("EMAIL"),
-								rs.getString("PASSWORD"),
-								rs.getString("NAME"),
-								rs.getTimestamp("REGDATE").toLocalDateTime());
-						member.setId(rs.getLong("ID"));
-						return member;
-					}
-				},
-				email);
+				 memRowMapper,email);
 		return result.isEmpty()?null:result.get(0);
 	}
 	
@@ -69,34 +71,11 @@ public class MemberDao {
 	
 	public List<Member> selectAll(){
 		List<Member> result = jdbcTemplate.query(
-				"select * from MEMBER",
-				new RowMapper<Member>() {
-					@Override
-					public Member mapRow(ResultSet rs, int rowNum) throws SQLException{
-						Member member = new Member(
-								rs.getString("EMAIL"),
-								rs.getString("PASSWORD"),
-								rs.getString("NAME"),
-								rs.getTimestamp("REGDATE").toLocalDateTime());
-						member.setId(rs.getLong("ID"));
-						return member;
-					}
-				});
+				"select * from MEMBER", memRowMapper);
 		return result;
 	}
 	
 	public int count() {
-		/*
-		List<Integer> results = jdbcTemplate.query(
-				"select count(*) from MEMBER",
-				new RowMapper<Integer>() {
-					@Override
-					public Integer mapRow(ResultSet rs, int rowNum) throws SQLException{
-						return rs.getInt(1);
-					}
-				});
-		return results.get(0);
-		*/
 		Integer count = jdbcTemplate.queryForObject(
 				"select count(*) from MEMBER",Integer.class);
 		return count;
@@ -106,18 +85,13 @@ public class MemberDao {
 	public List<Member> selectByRegdate(LocalDateTime from, LocalDateTime to){
 		List<Member> results = jdbcTemplate.query(
 			"select * from MEMBER where REGDATE between ? and ? order by REGDATE desc",
-			new RowMapper<Member>() {
-				@Override
-				public Member mapRow(ResultSet rs, int rowNum) throws SQLException{
-					Member member = new Member(
-							rs.getString("EMAIL"),
-							rs.getString("PASSWORD"),
-							rs.getString("NAME"),
-							rs.getTimestamp("REGDATE").toLocalDateTime());
-					member.setId(rs.getLong("ID"));
-					return member;
-				}
-				},from, to);
+			 memRowMapper,from, to);
 		return results;
+	}
+	
+	public Member selectById(Long memId) {
+		List<Member> results = jdbcTemplate.query(
+				"select * from MEMBER where ID =?",memRowMapper, memId);
+		return results.isEmpty() ? null : results.get(0);
 	}
 }
