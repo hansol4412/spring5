@@ -1,16 +1,21 @@
 package controller;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import java.util.List;
 import java.io.IOException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import spring.Member;
 import spring.MemberDao;
 import spring.MemberNotFoundException;
 import spring.MemberRegisterService;
+import spring.RegisterRequest;
+import spring.DuplicateMemberException;
 
 @RestController
 public class RestMemberController {
@@ -38,4 +43,15 @@ public class RestMemberController {
 		return member;
 	}
 	
+	@PostMapping("/api/members")
+	public void newMember(
+			@RequestBody @Valid RegisterRequest regReq, HttpServletResponse response) throws IOException  {
+		try {
+			Long newMemberId = memberRegisterService.regist(regReq);
+			response.setHeader("Location","/api/members/" + newMemberId);
+			response.setStatus(HttpServletResponse.SC_CREATED);
+		} catch (DuplicateMemberException dupEx) {
+			response.sendError(HttpServletResponse.SC_CONFLICT);
+		}
+	}
 }
